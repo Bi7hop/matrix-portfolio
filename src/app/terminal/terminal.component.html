@@ -1,24 +1,25 @@
 <div class="terminal-container" (click)="focusInput()">
-    <div class="terminal-header">
-      <div class="terminal-title">Matrix Terminal v1.0</div>
-      <div class="terminal-buttons">
-        <span class="terminal-button minimize"></span>
-        <span class="terminal-button maximize"></span>
-        <span class="terminal-button close"></span>
-      </div>
-    </div>
-    <div class="terminal-body">
-      <div class="terminal-output" #terminalOutput>
-      </div>
-      <div class="terminal-input-line">
-        <span class="terminal-prompt">></span>
-        <input 
-          type="text" 
-          class="terminal-input" 
-          #terminalInput
-          (keydown.enter)="handleCommand(terminalInput.value); terminalInput.value = ''"
-          autofocus
-        />
-      </div>
+  <div class="terminal-header">
+    <div class="terminal-title">Marcel Menke Terminal v1.0</div>
+    <div class="terminal-buttons">
+      <span class="terminal-button minimize"></span>
+      <span class="terminal-button maximize"></span>
+      <span class="terminal-button close"></span>
     </div>
   </div>
+  <div class="terminal-body">
+    <div class="terminal-output" #terminalOutput>
+    </div>
+    <div class="terminal-input-line">
+      <span class="terminal-prompt">></span>
+      <input 
+        type="text" 
+        class="terminal-input" 
+        #terminalInput
+        (keydown.enter)="handleCommand(terminalInput.value); terminalInput.value = ''"
+        autofocus
+      />
+    </div>
+  </div>
+  <app-status-bar></app-status-bar>
+</div>
