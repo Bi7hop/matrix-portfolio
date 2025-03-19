@@ -1,245 +1,247 @@
 :host {
-    display: block;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.terminal-container {
+  width: 80%;
+  height: 80%;
+  max-width: 800px;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+  font-family: var(--font-family);
+  color: var(--fg-color);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 30px var(--glow-color);
+  overflow: hidden;
+  position: relative;
+  animation: pulse 4s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 10px var(--glow-color);
+    text-shadow: 0 0 2px var(--glow-color);
   }
-  
-  .terminal-container {
-    width: 80%;
-    height: 80%;
-    max-width: 800px;
-    max-height: 600px;
-    display: flex;
-    flex-direction: column;
-    background-color: rgba(0, 0, 0, 0.9);
-    font-family: 'Courier New', monospace;
-    color: #00ff00;
-    border-radius: 8px;
-    border: 1px solid #00ff00;
-    box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
-    overflow: hidden;
-    position: relative;
-    animation: pulse 4s infinite alternate;
+  100% {
+    box-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
+    text-shadow: 0 0 3px var(--glow-color);
   }
-  
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-      text-shadow: 0 0 2px rgba(0, 255, 0, 0.3);
-    }
-    100% {
-      box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.2);
-      text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
-    }
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px;
+  background-color: var(--header-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.terminal-title {
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: 0 0 3px var(--fg-color);
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.terminal-button.minimize {
+  background-color: #ffbd44;
+}
+
+.terminal-button.maximize {
+  background-color: #00ca56;
+}
+
+.terminal-button.close {
+  background-color: #ff605c;
+}
+
+.terminal-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  overflow-y: auto;
+  background-color: var(--bg-color);
+}
+
+.terminal-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.terminal-body::-webkit-scrollbar-track {
+  background: var(--secondary-color);
+  border-radius: 5px;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 5px;
+  border: 2px solid var(--secondary-color);
+}
+
+.terminal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-color);
+}
+
+.terminal-body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) var(--secondary-color);
+}
+
+.terminal-output {
+  flex: 1;
+  margin-bottom: 10px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.4;
+  text-shadow: 0 0 5px var(--glow-color);
+}
+
+.terminal-line {
+  margin-bottom: 2px;
+  animation: textFlicker 0.2s infinite alternate;
+}
+
+@keyframes textFlicker {
+  0% {
+    opacity: 0.95;
   }
-  
-  .terminal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 15px;
-    background-color: rgba(0, 20, 0, 0.9);
-    border-bottom: 1px solid #00ff00;
+  100% {
+    opacity: 1;
   }
-  
-  .terminal-title {
-    font-size: 14px;
-    font-weight: bold;
-    text-shadow: 0 0 3px #00ff00;
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  background-color: var(--secondary-color);
+  padding: 8px 15px;
+  border-top: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.terminal-input-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0), var(--glow-color), rgba(0, 0, 0, 0));
+  background-size: 100% 200%;
+  animation: matrixScan 3s linear infinite;
+  pointer-events: none;
+  opacity: 0.1;
+}
+
+@keyframes matrixScan {
+  0% {
+    background-position: 0 -100%;
   }
-  
-  .terminal-buttons {
-    display: flex;
-    gap: 8px;
+  100% {
+    background-position: 0 100%;
   }
-  
-  .terminal-button {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    cursor: pointer;
+}
+
+.terminal-input-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    var(--glow-color) 2px,
+    var(--glow-color) 4px
+  );
+  pointer-events: none;
+  opacity: 0.03;
+}
+
+.terminal-prompt {
+  margin-right: 8px;
+  font-weight: bold;
+  color: var(--fg-color);
+  position: relative;
+  z-index: 2;
+  animation: promptBlink 2s infinite;
+}
+
+@keyframes promptBlink {
+  0%, 100% {
+    opacity: 1;
   }
-  
-  .terminal-button.minimize {
-    background-color: #ffbd44;
+  50% {
+    opacity: 0.8;
   }
-  
-  .terminal-button.maximize {
-    background-color: #00ca56;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg-color);
+  font-family: var(--font-family);
+  font-size: 16px;
+  height: 24px;
+  text-shadow: 0 0 3px var(--glow-color);
+  position: relative;
+  z-index: 2;
+}
+
+.terminal-input:focus {
+  outline: none;
+}
+
+.terminal-input {
+  position: relative;
+  caret-color: var(--fg-color);
+}
+
+.terminal-container {
+  border: 1px solid var(--border-color);
+}
+
+.terminal-output {
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 3px var(--fg-color), 0 0 5px var(--glow-color);
   }
-  
-  .terminal-button.close {
-    background-color: #ff605c;
+  to {
+    text-shadow: 0 0 5px var(--fg-color), 0 0 10px var(--glow-color), 0 0 15px var(--glow-color);
   }
-  
-  .terminal-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    overflow-y: auto;
-    background-color: rgba(0, 10, 0, 0.5);
-  }
-  
-  .terminal-body::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  .terminal-body::-webkit-scrollbar-track {
-    background: rgba(0, 20, 0, 0.8);
-    border-radius: 5px;
-  }
-  
-  .terminal-body::-webkit-scrollbar-thumb {
-    background: rgba(0, 255, 0, 0.6);
-    border-radius: 5px;
-    border: 2px solid rgba(0, 20, 0, 0.8);
-  }
-  
-  .terminal-body::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 255, 0, 0.8);
-  }
-  
-  .terminal-body {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 255, 0, 0.6) rgba(0, 20, 0, 0.8);
-  }
-  
-  .terminal-output {
-    flex: 1;
-    margin-bottom: 10px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    font-size: 14px;
-    line-height: 1.4;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-  }
-  
-  .terminal-line {
-    margin-bottom: 2px;
-    animation: textFlicker 0.2s infinite alternate;
-  }
-  
-  @keyframes textFlicker {
-    0% {
-      opacity: 0.95;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  
-  .terminal-input-line {
-    display: flex;
-    align-items: center;
-    background-color: rgba(0, 30, 0, 0.3);
-    padding: 8px 15px;
-    border-top: 1px solid rgba(0, 255, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .terminal-input-line::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 255, 0, 0.05), rgba(0, 0, 0, 0));
-    background-size: 100% 200%;
-    animation: matrixScan 3s linear infinite;
-    pointer-events: none;
-  }
-  
-  @keyframes matrixScan {
-    0% {
-      background-position: 0 -100%;
-    }
-    100% {
-      background-position: 0 100%;
-    }
-  }
-  
-  .terminal-input-line::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 2px,
-      rgba(0, 255, 0, 0.03) 2px,
-      rgba(0, 255, 0, 0.03) 4px
-    );
-    pointer-events: none;
-  }
-  
-  .terminal-prompt {
-    margin-right: 8px;
-    font-weight: bold;
-    color: #00ff00;
-    position: relative;
-    z-index: 2;
-    animation: promptBlink 2s infinite;
-  }
-  
-  @keyframes promptBlink {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.8;
-    }
-  }
-  
-  .terminal-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #00ff00;
-    font-family: 'Courier New', monospace;
-    font-size: 16px;
-    height: 24px;
-    text-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
-    position: relative;
-    z-index: 2;
-  }
-  
-  .terminal-input:focus {
-    outline: none;
-  }
-  
-  .terminal-input {
-    position: relative;
-    caret-color: #00ff00;
-  }
-  
-  .terminal-container {
-    border: 1px solid #0f0;
-  }
-  
-  .terminal-output {
-    animation: textGlow 2s ease-in-out infinite alternate;
-  }
-  
-  @keyframes textGlow {
-    from {
-      text-shadow: 0 0 3px #0f0, 0 0 5px #0f0;
-    }
-    to {
-      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 15px rgba(0, 255, 0, 0.2);
-    }
-  }
-  
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
