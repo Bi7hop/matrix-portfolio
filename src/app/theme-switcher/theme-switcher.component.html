@@ -1,0 +1,24 @@
+<div class="theme-switcher">
+    <button class="theme-button" (click)="toggleMenu()" title="Change Theme">
+      <span class="theme-icon">⚙️</span>
+      <span class="theme-name">{{ currentTheme?.displayName }}</span>
+    </button>
+    
+    <div class="theme-menu" [class.open]="isOpen">
+      <div class="theme-menu-header">Select Theme</div>
+      <div 
+        *ngFor="let theme of themes" 
+        class="theme-option"
+        [class.active]="theme.name === currentTheme?.name"
+        (click)="selectTheme(theme.name)"
+      >
+        <div class="theme-preview" [style.background-color]="theme.backgroundColor">
+          <div class="theme-preview-text" [style.color]="theme.foregroundColor">T</div>
+        </div>
+        <div class="theme-info">
+          <div class="theme-option-name">{{ theme.displayName }}</div>
+          <div class="theme-option-desc">{{ theme.description }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
