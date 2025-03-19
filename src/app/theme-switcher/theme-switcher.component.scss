@@ -1,0 +1,110 @@
+.theme-switcher {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 100;
+  }
+  
+  .theme-button {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--fg-color);
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: var(--secondary-color);
+      box-shadow: 0 0 10px var(--glow-color);
+    }
+  }
+  
+  .theme-icon {
+    margin-right: 8px;
+    font-size: 16px;
+  }
+  
+  .theme-name {
+    font-size: 14px;
+  }
+  
+  .theme-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 5px;
+    width: 250px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 0 15px var(--glow-color);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    
+    &.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+  }
+  
+  .theme-menu-header {
+    padding: 10px 15px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--header-color);
+  }
+  
+  .theme-option {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    
+    &:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    &.active {
+      background-color: var(--secondary-color);
+      border-left: 3px solid var(--accent-color);
+    }
+  }
+  
+  .theme-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .theme-preview-text {
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .theme-info {
+    flex: 1;
+  }
+  
+  .theme-option-name {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .theme-option-desc {
+    font-size: 12px;
+    opacity: 0.8;
+  }
