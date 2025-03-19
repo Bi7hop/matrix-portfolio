@@ -1,14 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --bg-color: #000000;
+  --fg-color: #00ff00;
+  --accent-color: #00aa00;
+  --secondary-color: #003300;
+  --font-family: 'Courier New', monospace;
+  --header-color: rgba(0, 20, 0, 0.9);
+  --border-color: #00ff00;
+  --glow-color: rgba(0, 255, 0, 0.5);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=VT323&family=Fira+Code:wght@400;500&display=swap');
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body, html {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: #000;
-    font-family: 'Courier New', monospace;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  font-family: var(--font-family);
+  color: var(--fg-color);
+}
