@@ -1,0 +1,87 @@
+.idle-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .matrix-rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(0,255,0,0.1), rgba(0,0,0,1));
+    pointer-events: none;
+    animation: matrixRain 6s infinite;
+  }
+  
+  @keyframes matrixRain {
+    0% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+  }
+  
+  .hacking-logs {
+    color: #0f0;
+    font-family: monospace;
+    font-size: 20px;
+    line-height: 28px;
+    text-shadow: 0 0 8px #0f0;
+    z-index: 2;
+    margin-bottom: 40px;
+    max-width: 90%;
+    text-align: center;
+  }
+  
+  .log-line {
+    white-space: pre;
+  }
+  
+  .rotating-info {
+    position: relative;
+    width: 600px;
+    height: 80px;
+    overflow: hidden;
+    color: #0f0;
+    font-size: 24px;
+    line-height: 32px;
+    font-family: monospace;
+    text-align: center;
+    text-shadow: 0 0 8px #0f0;
+    z-index: 2;
+  }
+  
+  .info-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .info-slide.active {
+    opacity: 1;
+  }
+  
