@@ -1,0 +1,23 @@
+<div class="status-bar">
+    <div class="status-item time">{{ currentTime }}</div>
+    <div class="status-item cpu">
+      CPU: {{ cpuUsage }}%
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width]="cpuUsage + '%'"></div>
+      </div>
+    </div>
+    <div class="status-item memory">
+      MEM: {{ memoryUsage }}%
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width]="memoryUsage + '%'"></div>
+      </div>
+    </div>
+    <div class="status-item network">
+      <span class="network-text">NET: </span>
+      <div class="network-activity">
+        <span *ngFor="let dot of networkDots" 
+              class="network-dot" 
+              [class.active]="dot.active">•</span>
+      </div>
+    </div>
+  </div>
