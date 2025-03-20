@@ -20,6 +20,8 @@ export class TerminalComponent implements OnInit, AfterViewInit {
   historyIndex: number = -1;
 
   currentTheme: ThemeName = 'matrix';
+  typewriterSpeed: number = 30;
+  glitchEnabled: boolean = false;
 
   personalInfo = {
     name: 'Marcel Menke',
@@ -57,6 +59,37 @@ Always looking for the next challenge in the digital realm.`,
       email: 'marcel.menke1981@gmail.com',
       github: 'https://github.com/Bi7hop',
       linkedin: 'www.linkedin.com/in/marcel-menke'
+    },
+    cv: {
+      education: [
+        {
+          degree: 'Frontend Developer',
+          institution: 'Developer Akademie',
+          year: '04/2024-11/2024',
+          description: 'Intensive Ausbildung in Frontend-Entwicklung mit Angular und weiteren Webtechnologien.'
+        },
+        {
+          degree: 'Backend Developer',
+          institution: 'Developer Akademie',
+          year: '11/2024-now',
+          description: 'Vertiefung in Backend-Entwicklung mit Python, Django.'
+        }
+      ],
+      experience: [
+        {
+          position: 'Junior Frontend Developer (Quereinsteiger)',
+          company: '',
+          period: '2024 - Heute',
+          description: 'Im Rahmen meiner Weiterbildung habe ich bereits erste Erfahrungen mit Angular-basierten Webanwendungen und Komponenten gesammelt. Obwohl ich bislang noch keinen Job in der Branche hatte, freue ich mich über jede Chance, meine Fähigkeiten in einem professionellen Umfeld einzubringen und weiterzuentwickeln.'
+        },
+      ],
+      languages: [
+        { name: 'Deutsch', level: 'Muttersprache' },
+        { name: 'Englisch', level: 'Fließend (C1)' }
+      ],
+      certifications: [
+        { name: 'Frontend-Development', issuer: 'Developer Akademie', year: '2024' },
+      ]
     }
   };
 
@@ -82,7 +115,7 @@ Always looking for the next challenge in the digital realm.`,
     this.terminalInput.nativeElement.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
-  initializeTerminal(): void {
+  async initializeTerminal(): Promise<void> {
     const asciiArt = `
    __  __                    _   __  __            _        
   |  \\/  | __ _ _ __ ___ ___| | |  \\/  | ___ _ __ | | _____ 
@@ -92,8 +125,8 @@ Always looking for the next challenge in the digital realm.`,
                                                             
   `;
     this.addLine(asciiArt);
-    this.addLine(`Terminal v1.0 - ${this.themeService.getCurrentTheme().displayName} Theme`);
-    this.addLine('Type "help" to see available commands.');
+    await this.addLineTypewriter(`Terminal v1.0 - ${this.themeService.getCurrentTheme().displayName} Theme`);
+    await this.addLineTypewriter('Type "help" to see available commands.');
     this.addLine('----------------------------------------');
     this.addLine('');
   }
@@ -134,95 +167,148 @@ Always looking for the next challenge in the digital realm.`,
       }
       this.historyIndex = -1;
     }
-    this.addLine(`> ${command}`);
+    
+    await this.addLineTypewriter(`> ${command}`, this.glitchEnabled);
+    
     const cmd = command.trim().toLowerCase();
     if (cmd === '') {
     } else if (cmd === 'help') {
-      this.showHelp();
+      await this.showHelp();
     } else if (cmd === 'clear') {
       this.clearTerminal();
     } else if (cmd === 'about') {
-      await this.addLineTypewriter(`Name: ${this.personalInfo.name}`);
-      await this.addLineTypewriter(`Title: ${this.personalInfo.title}`);
-      await this.addLineTypewriter(`Location: ${this.personalInfo.location}`);
-      await this.addLineTypewriter('');
-      await this.addLineTypewriter('Bio:');
-      await this.addLineTypewriter(this.personalInfo.bio);
+      await this.addLineTypewriter(`Name: ${this.personalInfo.name}`, this.glitchEnabled);
+      await this.addLineTypewriter(`Title: ${this.personalInfo.title}`, this.glitchEnabled);
+      await this.addLineTypewriter(`Location: ${this.personalInfo.location}`, this.glitchEnabled);
+      await this.addLineTypewriter('', this.glitchEnabled);
+      await this.addLineTypewriter('Bio:', this.glitchEnabled);
+      await this.addLineTypewriter(this.personalInfo.bio, this.glitchEnabled);
     } else if (cmd === 'skills') {
-      this.showSkills();
+      await this.showSkills();
     } else if (cmd === 'projects') {
-      this.showProjects();
+      await this.showProjects();
     } else if (cmd === 'contact') {
-      this.showContact();
+      await this.showContact();
     } else if (cmd === 'hack') {
-      this.startHackingAnimation();
+      await this.startHackingAnimation();
     } else if (cmd === 'matrix') {
-      this.startMatrixRain();
+      await this.startMatrixRain();
+    } else if (cmd === 'glitch') {
+      await this.toggleGlitchMode();
     } else if (cmd === 'sudo rm -rf /') {
-      this.addLine('Nice try. This terminal has advanced security features!');
+      const line = document.createElement('div');
+      line.classList.add('terminal-line', 'glitch-text');
+      line.setAttribute('data-text', 'Nice try. This terminal has advanced security features!');
+      line.textContent = 'Nice try. This terminal has advanced security features!';
+      this.terminalOutput.nativeElement.appendChild(line);
+      this.scrollToBottom();
     } else if (cmd.startsWith('echo ')) {
-      this.addLine(command.substring(5));
+      await this.addLineTypewriter(command.substring(5), this.glitchEnabled);
     } else if (cmd === 'date') {
-      this.addLine(new Date().toString());
+      await this.addLineTypewriter(new Date().toString(), this.glitchEnabled);
     } else if (cmd === 'whoami') {
-      this.addLine(this.personalInfo.name);
+      await this.addLineTypewriter(this.personalInfo.name, this.glitchEnabled);
     } else if (cmd === 'ls' || cmd === 'dir') {
-      this.listDirectory();
+      await this.listDirectory();
     } else if (cmd === 'logout') {
-      this.addLine('Logging out...');
+      await this.addLineTypewriter('Logging out...', this.glitchEnabled);
       setTimeout(() => {
         this.authService.logout();
       }, 1000);
     } else if (cmd === 'theme') {
-      this.showThemes();
+      await this.showThemes();
     } else if (cmd.startsWith('theme ')) {
       const themeName = cmd.substring(6).trim();
-      this.changeTheme(themeName);
+      await this.changeTheme(themeName);
     } else if (cmd === 'showcase') {
-      this.showProjectList();
+      await this.showProjectList();
     } else if (cmd.startsWith('showcase ')) {
       const param = command.substring(9).trim();
       const projectIndex = parseInt(param) - 1;
       if (!isNaN(projectIndex) && projectIndex >= 0 && projectIndex < this.personalInfo.projects.length) {
-        this.showProjectDetailsByIndex(projectIndex);
+        await this.showProjectDetailsByIndex(projectIndex);
       } else {
-        this.showProjectDetails(param);
+        await this.showProjectDetails(param);
       }
     } else if (cmd.startsWith('open ')) {
       const param = command.substring(5).trim();
       const projectIndex = parseInt(param) - 1;
       if (!isNaN(projectIndex) && projectIndex >= 0 && projectIndex < this.personalInfo.projects.length) {
-        this.openProjectDemoByIndex(projectIndex);
+        await this.openProjectDemoByIndex(projectIndex);
       } else {
-        this.openProjectDemo(param);
+        await this.openProjectDemo(param);
       }
     } else if (cmd.startsWith('code ')) {
       const param = command.substring(5).trim();
       const projectIndex = parseInt(param) - 1;
       if (!isNaN(projectIndex) && projectIndex >= 0 && projectIndex < this.personalInfo.projects.length) {
-        this.openProjectCodeByIndex(projectIndex);
+        await this.openProjectCodeByIndex(projectIndex);
       } else {
-        this.openProjectCode(param);
+        await this.openProjectCode(param);
+      }
+    } else if (cmd === 'cv') {
+      await this.showCvOverview();
+    } else if (cmd === 'cv education' || cmd === 'cv 1') {
+      await this.showCvEducation();
+    } else if (cmd === 'cv experience' || cmd === 'cv 2') {
+      await this.showCvExperience();
+    } else if (cmd === 'cv languages' || cmd === 'cv 3') {
+      await this.showCvLanguages();
+    } else if (cmd === 'cv certifications' || cmd === 'cv 4') {
+      await this.showCvCertifications();
+    } else if (cmd.startsWith('cv ')) {
+      const subCmd = cmd.substring(3).trim();
+      if (!['1', '2', '3', '4', 'education', 'experience', 'languages', 'certifications'].includes(subCmd)) {
+        await this.addLineTypewriter(`Unbekannter CV-Unterbefehl: ${subCmd}`, this.glitchEnabled);
+        await this.addLineTypewriter('Gib "cv" ein, um verfügbare CV-Befehle anzuzeigen.', this.glitchEnabled);
       }
     } else {
-      this.addLine(`Command not found: ${command}`);
-      this.addLine('Type "help" to see available commands.');
-    }
-    this.addLine('');
-    setTimeout(() => {
+      const errorLine = document.createElement('div');
+      errorLine.classList.add('terminal-line', 'glitch-text');
+      errorLine.setAttribute('data-text', `Command not found: ${command}`);
+      errorLine.textContent = `Command not found: ${command}`;
+      this.terminalOutput.nativeElement.appendChild(errorLine);
       this.scrollToBottom();
-    }, 0);
+      
+      await this.addLineTypewriter('Type "help" to see available commands.', this.glitchEnabled);
+    }
+    
+    this.addLine('');
+    this.scrollToBottom();
     this.terminalInput.nativeElement.focus();
   }
 
-  async addLineTypewriter(text: string, speed: number = 50): Promise<void> {
+  async toggleGlitchMode(): Promise<void> {
+    this.glitchEnabled = !this.glitchEnabled;
+    if (this.glitchEnabled) {
+      const line = document.createElement('div');
+      line.classList.add('terminal-line', 'glitch-text');
+      line.setAttribute('data-text', 'Glitch mode enabled. System unstable.');
+      line.textContent = 'Glitch mode enabled. System unstable.';
+      this.terminalOutput.nativeElement.appendChild(line);
+    } else {
+      await this.addLineTypewriter('Glitch mode disabled. System stabilized.');
+    }
+    this.scrollToBottom();
+  }
+
+  async addLineTypewriter(text: string, enableGlitch: boolean = false): Promise<void> {
     const line = document.createElement('div');
-    line.classList.add('terminal-line');
-    if (text.trim() === '') {
-      line.innerHTML = '&nbsp;';
+    line.classList.add('terminal-line', 'typing');
+    if (enableGlitch) {
+      line.classList.add('flicker-text');
     }
     this.terminalOutput.nativeElement.appendChild(line);
-    await this.typewriterService.typeText(text, line, speed);
+    
+    const scrollInterval = setInterval(() => {
+      this.scrollToBottom();
+    }, 100);
+    
+    await this.typewriterService.typeText(text, line, this.typewriterSpeed, enableGlitch);
+    
+    clearInterval(scrollInterval);
+    line.classList.remove('typing');
+    this.scrollToBottom();
   }
 
   addLine(text: string): void {
@@ -250,256 +336,362 @@ Always looking for the next challenge in the digital realm.`,
     }
   }
 
-  showHelp(): void {
-    this.addLine('Available commands:');
-    this.addLine('  help     - Show this help message');
-    this.addLine('  about    - Show information about me');
-    this.addLine('  skills   - Show my technical skills');
-    this.addLine('  projects - List my projects');
-    this.addLine('  contact  - Display contact information');
-    this.addLine('  clear    - Clear terminal');
-    this.addLine('  date     - Show current date and time');
-    this.addLine('  whoami   - Show user name');
-    this.addLine('  ls/dir   - List directory contents');
-    this.addLine('  echo     - Echo a message');
-    this.addLine('  hack     - Start hacking animation');
-    this.addLine('  matrix   - Start Matrix rain effect');
-    this.addLine('  theme    - Show or change terminal themes');
-    this.addLine('  logout   - Log out of the terminal');
-    this.addLine('  showcase           - List all projects');
-    this.addLine('  showcase [number/name] - Show details about a specific project');
-    this.addLine('  open [number/name]     - Open project live demo');
-    this.addLine('  code [number/name]     - View project source code');
-    this.addLine('');
-    this.addLine('Try to find the hidden easter eggs!');
+  async showHelp(): Promise<void> {
+    await this.addLineTypewriter('Available commands:', this.glitchEnabled);
+    await this.addLineTypewriter('  help     - Show this help message', this.glitchEnabled);
+    await this.addLineTypewriter('  about    - Show information about me', this.glitchEnabled);
+    await this.addLineTypewriter('  skills   - Show my technical skills', this.glitchEnabled);
+    await this.addLineTypewriter('  projects - List my projects', this.glitchEnabled);
+    await this.addLineTypewriter('  contact  - Display contact information', this.glitchEnabled);
+    await this.addLineTypewriter('  cv       - Show interactive resume', this.glitchEnabled);
+    await this.addLineTypewriter('  clear    - Clear terminal', this.glitchEnabled);
+    await this.addLineTypewriter('  date     - Show current date and time', this.glitchEnabled);
+    await this.addLineTypewriter('  whoami   - Show user name', this.glitchEnabled);
+    await this.addLineTypewriter('  ls/dir   - List directory contents', this.glitchEnabled);
+    await this.addLineTypewriter('  echo     - Echo a message', this.glitchEnabled);
+    await this.addLineTypewriter('  hack     - Start hacking animation', this.glitchEnabled);
+    await this.addLineTypewriter('  matrix   - Start Matrix rain effect', this.glitchEnabled);
+    await this.addLineTypewriter('  glitch   - Toggle glitch mode', this.glitchEnabled);
+    await this.addLineTypewriter('  theme    - Show or change terminal themes', this.glitchEnabled);
+    await this.addLineTypewriter('  logout   - Log out of the terminal', this.glitchEnabled);
+    await this.addLineTypewriter('  showcase           - List all projects', this.glitchEnabled);
+    await this.addLineTypewriter('  showcase [number/name] - Show details about a specific project', this.glitchEnabled);
+    await this.addLineTypewriter('  open [number/name]     - Open project live demo', this.glitchEnabled);
+    await this.addLineTypewriter('  code [number/name]     - View project source code', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('Try to find the hidden easter eggs!', this.glitchEnabled);
   }
 
-  showThemes(): void {
-    this.addLine('Available themes:');
-    this.addLine('');
-    this.themeService.getThemes().forEach(theme => {
+  async showThemes(): Promise<void> {
+    await this.addLineTypewriter('Available themes:', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    for (const theme of this.themeService.getThemes()) {
       const prefix = theme.name === this.currentTheme ? '* ' : '  ';
-      this.addLine(`${prefix}${theme.name} - ${theme.description}`);
-    });
-    this.addLine('');
-    this.addLine('Usage: theme [name]  - Change to specified theme');
+      await this.addLineTypewriter(`${prefix}${theme.name} - ${theme.description}`, this.glitchEnabled);
+    }
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('Usage: theme [name]  - Change to specified theme', this.glitchEnabled);
   }
 
-  changeTheme(themeName: string): void {
+  async changeTheme(themeName: string): Promise<void> {
     const themes = this.themeService.getThemes();
     const theme = themes.find(t => t.name.toLowerCase() === themeName.toLowerCase());
     if (theme) {
       this.themeService.setTheme(theme.name as ThemeName);
-      this.addLine(`Theme changed to ${theme.displayName}.`);
+      await this.addLineTypewriter(`Theme changed to ${theme.displayName}.`, this.glitchEnabled);
     } else {
-      this.addLine(`Theme "${themeName}" not found. Type "theme" to see available themes.`);
+      await this.addLineTypewriter(`Theme "${themeName}" not found. Type "theme" to see available themes.`, this.glitchEnabled);
     }
   }
 
-  showAbout(): void {
-    this.addLine(`Name: ${this.personalInfo.name}`);
-    this.addLine(`Title: ${this.personalInfo.title}`);
-    this.addLine(`Location: ${this.personalInfo.location}`);
-    this.addLine('');
-    this.addLine('Bio:');
-    this.addLine(this.personalInfo.bio);
+  async showSkills(): Promise<void> {
+    await this.addLineTypewriter('Technical Skills:', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    for (const skillGroup of this.personalInfo.skills) {
+      await this.addLineTypewriter(`[${skillGroup.category}]`, this.glitchEnabled);
+      await this.addLineTypewriter(skillGroup.items.join(', '), this.glitchEnabled);
+      await this.addLineTypewriter('', this.glitchEnabled);
+    }
+  }
+  
+  async showProjects(): Promise<void> {
+    await this.addLineTypewriter('Projects:', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    for (let i = 0; i < this.personalInfo.projects.length; i++) {
+      const project = this.personalInfo.projects[i];
+      await this.addLineTypewriter(`${i + 1}. ${project.name}`, this.glitchEnabled);
+      await this.addLineTypewriter(`   ${project.description}`, this.glitchEnabled);
+      await this.addLineTypewriter(`   Technologies: ${project.tech.join(', ')}`, this.glitchEnabled);
+      await this.addLineTypewriter('', this.glitchEnabled);
+    }
+    await this.addLineTypewriter('For more details, type: showcase [number/name]', this.glitchEnabled);
   }
 
-  showSkills(): void {
-    this.addLine('Technical Skills:');
-    this.addLine('');
-    this.personalInfo.skills.forEach(skillGroup => {
-      this.addLine(`[${skillGroup.category}]`);
-      this.addLine(skillGroup.items.join(', '));
-      this.addLine('');
-    });
+  async showContact(): Promise<void> {
+    await this.addLineTypewriter('Contact Information:', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter(`Email: ${this.personalInfo.contact.email}`, this.glitchEnabled);
+    await this.addLineTypewriter(`GitHub: ${this.personalInfo.contact.github}`, this.glitchEnabled);
+    await this.addLineTypewriter(`LinkedIn: ${this.personalInfo.contact.linkedin}`, this.glitchEnabled);
   }
 
-  showProjects(): void {
-    this.addLine('Projects:');
-    this.addLine('');
-    this.personalInfo.projects.forEach((project, index) => {
-      this.addLine(`${index + 1}. ${project.name}`);
-      this.addLine(`   ${project.description}`);
-      this.addLine(`   Technologies: ${project.tech.join(', ')}`);
-      this.addLine('');
-    });
-    this.addLine('For more details, type: showcase [number/name]');
+  async listDirectory(): Promise<void> {
+    await this.addLineTypewriter('Directory contents:', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('drwxr-xr-x  about.txt', this.glitchEnabled);
+    await this.addLineTypewriter('drwxr-xr-x  skills.md', this.glitchEnabled);
+    await this.addLineTypewriter('drwxr-xr-x  projects/', this.glitchEnabled);
+    await this.addLineTypewriter('drwxr-xr-x  contact.json', this.glitchEnabled);
+    await this.addLineTypewriter('drwxr-xr-x  cv/', this.glitchEnabled);
+    await this.addLineTypewriter('drwxr-xr-x  secrets/', this.glitchEnabled);
   }
 
-  showContact(): void {
-    this.addLine('Contact Information:');
-    this.addLine('');
-    this.addLine(`Email: ${this.personalInfo.contact.email}`);
-    this.addLine(`GitHub: ${this.personalInfo.contact.github}`);
-    this.addLine(`LinkedIn: ${this.personalInfo.contact.linkedin}`);
-  }
-
-  listDirectory(): void {
-    this.addLine('Directory contents:');
-    this.addLine('');
-    this.addLine('drwxr-xr-x  about.txt');
-    this.addLine('drwxr-xr-x  skills.md');
-    this.addLine('drwxr-xr-x  projects/');
-    this.addLine('drwxr-xr-x  contact.json');
-    this.addLine('drwxr-xr-x  secrets/');
-  }
-
-  startHackingAnimation(): void {
-    this.addLine('INITIATING HACK SEQUENCE...');
-    const lines = 25;
-    let count = 0;
-    const interval = setInterval(() => {
+  async startHackingAnimation(): Promise<void> {
+    await this.addLineTypewriter('INITIATING HACK SEQUENCE...', true); 
+    const characters = '0123456789abcdef';
+    const lines = 10;
+    
+    for (let i = 0; i < lines; i++) {
       let hexLine = '';
       const lineLength = Math.floor(Math.random() * 50) + 30;
-      for (let i = 0; i < lineLength; i++) {
-        hexLine += Math.floor(Math.random() * 16).toString(16);
+      for (let j = 0; j < lineLength; j++) {
+        hexLine += characters.charAt(Math.floor(Math.random() * characters.length));
       }
-      this.addLine(hexLine);
-      this.scrollToBottom();
-      count++;
-      if (count >= lines) {
-        clearInterval(interval);
-        this.addLine('');
-        this.addLine('HACK COMPLETE. ACCESS GRANTED.');
-        this.addLine('');
-        this.scrollToBottom();
-      }
-    }, 100);
+      await this.addLineTypewriter(hexLine, true); 
+    }
+    
+    const completeLine = document.createElement('div');
+    completeLine.classList.add('terminal-line', 'glitch-text');
+    completeLine.setAttribute('data-text', 'HACK COMPLETE. ACCESS GRANTED.');
+    completeLine.textContent = 'HACK COMPLETE. ACCESS GRANTED.';
+    this.terminalOutput.nativeElement.appendChild(completeLine);
+    this.scrollToBottom();
   }
 
-  startMatrixRain(): void {
-    this.addLine('Initiating Matrix rain sequence...');
-    this.addLine('');
+  async startMatrixRain(): Promise<void> {
+    await this.addLineTypewriter('Initiating Matrix rain sequence...', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$#@!*%&';
-    const lines = 15;
-    let count = 0;
-    const interval = setInterval(() => {
+    const lines = 8;
+    
+    for (let i = 0; i < lines; i++) {
+      const line = document.createElement('div');
+      line.classList.add('terminal-line');
+      this.terminalOutput.nativeElement.appendChild(line);
+      
       let matrixLine = '';
       const lineLength = 50;
-      for (let i = 0; i < lineLength; i++) {
-        const randomChar = characters.charAt(Math.floor(Math.random() * characters.length));
-        matrixLine += randomChar;
+      for (let j = 0; j < lineLength; j++) {
+        matrixLine += characters.charAt(Math.floor(Math.random() * characters.length));
       }
-      this.addLine(matrixLine);
-      this.scrollToBottom();
-      count++;
-      if (count >= lines) {
-        clearInterval(interval);
-        this.addLine('');
-        this.addLine('Matrix rain sequence complete.');
-        this.addLine('');
-        this.scrollToBottom();
-      }
-    }, 150);
+      
+      await this.typewriterService.matrixCascade(matrixLine, line, 5);
+    }
+    
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('Matrix rain sequence complete.', this.glitchEnabled);
   }
 
-  showProjectList(): void {
-    this.addLine('Project Showcase:');
-    this.addLine('');
-    this.personalInfo.projects.forEach((project, index) => {
-      this.addLine(`${index + 1}. ${project.name}`);
-    });
-    this.addLine('');
-    this.addLine('Type "showcase [number]" to view project details');
-    this.addLine('Type "open [number]" to open live demo');
-    this.addLine('Type "code [number]" to view source code');
+  async showProjectList(): Promise<void> {
+    await this.addLineTypewriter('Project Showcase:', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    for (let i = 0; i < this.personalInfo.projects.length; i++) {
+      await this.addLineTypewriter(`${i + 1}. ${this.personalInfo.projects[i].name}`, this.glitchEnabled);
+    }
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('Type "showcase [number]" to view project details', this.glitchEnabled);
+    await this.addLineTypewriter('Type "open [number]" to open live demo', this.glitchEnabled);
+    await this.addLineTypewriter('Type "code [number]" to view source code', this.glitchEnabled);
   }
 
-  showProjectDetailsByIndex(index: number): void {
+  async showProjectDetailsByIndex(index: number): Promise<void> {
     if (index < 0 || index >= this.personalInfo.projects.length) {
-      this.addLine(`Project number out of range. Available: 1-${this.personalInfo.projects.length}`);
+      await this.addLineTypewriter(`Project number out of range. Available: 1-${this.personalInfo.projects.length}`, this.glitchEnabled);
       return;
     }
     const project = this.personalInfo.projects[index];
-    this.displayProjectDetails(project);
+    await this.displayProjectDetails(project);
   }
 
-  showProjectDetails(projectName: string): void {
+  async showProjectDetails(projectName: string): Promise<void> {
     const project = this.personalInfo.projects.find(p => p.name.toLowerCase() === projectName.toLowerCase());
     if (!project) {
-      this.addLine(`Project "${projectName}" not found.`);
-      this.addLine('Available projects:');
-      this.personalInfo.projects.forEach((p, index) => {
-        this.addLine(`  ${index + 1}. ${p.name}`);
-      });
+      await this.addLineTypewriter(`Project "${projectName}" not found.`, this.glitchEnabled);
+      await this.addLineTypewriter('Available projects:', this.glitchEnabled);
+      for (let i = 0; i < this.personalInfo.projects.length; i++) {
+        await this.addLineTypewriter(`  ${i + 1}. ${this.personalInfo.projects[i].name}`, this.glitchEnabled);
+      }
       return;
     }
-    this.displayProjectDetails(project);
+    await this.displayProjectDetails(project);
   }
 
-  displayProjectDetails(project: any): void {
-    this.addLine('');
+  async displayProjectDetails(project: any): Promise<void> {
+    await this.addLineTypewriter('', this.glitchEnabled);
     this.addLine('╔' + '═'.repeat(60) + '╗');
     this.addLine('║' + ' '.repeat(Math.floor((60 - project.name.length) / 2)) + project.name + ' '.repeat(Math.ceil((60 - project.name.length) / 2)) + '║');
     this.addLine('╚' + '═'.repeat(60) + '╝');
-    this.addLine('');
-    this.addLine('Description:');
-    this.addLine(project.description);
-    this.addLine('');
-    this.addLine('Technologies:');
-    this.addLine(project.tech.join(', '));
-    this.addLine('');
+    
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('Description:', this.glitchEnabled);
+    await this.addLineTypewriter(project.description, this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('Technologies:', this.glitchEnabled);
+    await this.addLineTypewriter(project.tech.join(', '), this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    
     const projectIndex = this.personalInfo.projects.findIndex(p => p.name === project.name) + 1;
     if (project.liveDemo) {
-      this.addLine('Live Demo:');
-      this.addLine(`  ${project.liveDemo}`);
-      this.addLine(`Type "open ${projectIndex}" to visit the live demo`);
-      this.addLine('');
+      await this.addLineTypewriter('Live Demo:', this.glitchEnabled);
+      await this.addLineTypewriter(`  ${project.liveDemo}`, this.glitchEnabled);
+      await this.addLineTypewriter(`Type "open ${projectIndex}" to visit the live demo`, this.glitchEnabled);
+      await this.addLineTypewriter('', this.glitchEnabled);
     }
     if (project.githubRepo) {
-      this.addLine('Source Code:');
-      this.addLine(`  ${project.githubRepo}`);
-      this.addLine(`Type "code ${projectIndex}" to view the source code`);
-      this.addLine('');
+      await this.addLineTypewriter('Source Code:', this.glitchEnabled);
+      await this.addLineTypewriter(`  ${project.githubRepo}`, this.glitchEnabled);
+      await this.addLineTypewriter(`Type "code ${projectIndex}" to view the source code`, this.glitchEnabled);
+      await this.addLineTypewriter('', this.glitchEnabled);
     }
   }
 
-  openProjectDemoByIndex(index: number): void {
+  async openProjectDemoByIndex(index: number): Promise<void> {
     if (index < 0 || index >= this.personalInfo.projects.length) {
-      this.addLine(`Project number out of range. Available: 1-${this.personalInfo.projects.length}`);
+      await this.addLineTypewriter(`Project number out of range. Available: 1-${this.personalInfo.projects.length}`, this.glitchEnabled);
       return;
     }
     const project = this.personalInfo.projects[index];
     if (!project.liveDemo) {
-      this.addLine(`Live demo for "${project.name}" not found.`);
+      await this.addLineTypewriter(`Live demo for "${project.name}" not found.`, this.glitchEnabled);
       return;
     }
-    this.addLine(`Opening ${project.name} live demo...`);
+    await this.addLineTypewriter(`Opening ${project.name} live demo...`, this.glitchEnabled);
     window.open(project.liveDemo, '_blank');
   }
 
-  openProjectDemo(projectName: string): void {
+  async openProjectDemo(projectName: string): Promise<void> {
     const project = this.personalInfo.projects.find(p => p.name.toLowerCase() === projectName.toLowerCase());
     if (!project || !project.liveDemo) {
-      this.addLine(`Live demo for "${projectName}" not found.`);
+      await this.addLineTypewriter(`Live demo for "${projectName}" not found.`, this.glitchEnabled);
       return;
     }
-    this.addLine(`Opening ${project.name} live demo...`);
+    await this.addLineTypewriter(`Opening ${project.name} live demo...`, this.glitchEnabled);
     window.open(project.liveDemo, '_blank');
   }
 
-  openProjectCodeByIndex(index: number): void {
+  async openProjectCodeByIndex(index: number): Promise<void> {
     if (index < 0 || index >= this.personalInfo.projects.length) {
-      this.addLine(`Project number out of range. Available: 1-${this.personalInfo.projects.length}`);
+      await this.addLineTypewriter(`Project number out of range. Available: 1-${this.personalInfo.projects.length}`, this.glitchEnabled);
       return;
     }
     const project = this.personalInfo.projects[index];
     if (!project.githubRepo) {
-      this.addLine(`Source code for "${project.name}" not found.`);
+      await this.addLineTypewriter(`Source code for "${project.name}" not found.`, this.glitchEnabled);
       return;
     }
-    this.addLine(`Opening ${project.name} source code repository...`);
+    await this.addLineTypewriter(`Opening ${project.name} source code repository...`, this.glitchEnabled);
     window.open(project.githubRepo, '_blank');
   }
 
-  openProjectCode(projectName: string): void {
+  async openProjectCode(projectName: string): Promise<void> {
     const project = this.personalInfo.projects.find(p => p.name.toLowerCase() === projectName.toLowerCase());
     if (!project || !project.githubRepo) {
-      this.addLine(`Source code for "${projectName}" not found.`);
+      await this.addLineTypewriter(`Source code for "${projectName}" not found.`, this.glitchEnabled);
       return;
     }
-    this.addLine(`Opening ${project.name} source code repository...`);
+    await this.addLineTypewriter(`Opening ${project.name} source code repository...`, this.glitchEnabled);
     window.open(project.githubRepo, '_blank');
+  }
+  
+  wrapText(text: string, maxWidth: number): string[] {
+    const lines: string[] = [];
+    const words = text.split(' ');
+    let currentLine = '';
+    
+    for (const word of words) {
+      if (currentLine.length + word.length + 1 <= maxWidth) {
+        currentLine += (currentLine === '' ? '' : ' ') + word;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    
+    if (currentLine !== '') {
+      lines.push(currentLine);
+    }
+    
+    return lines;
+  }
+  
+  async showCvOverview(): Promise<void> {
+    await this.addLineTypewriter('Interactive CV - Marcel Menke', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('Verfügbare Abschnitte:', this.glitchEnabled);
+    await this.addLineTypewriter('  [1] cv education      - Zeigt Bildungsweg an', this.glitchEnabled);
+    await this.addLineTypewriter('  [2] cv experience     - Zeigt Berufserfahrung an', this.glitchEnabled);
+    await this.addLineTypewriter('  [3] cv languages      - Zeigt Sprachkenntnisse an', this.glitchEnabled);
+    await this.addLineTypewriter('  [4] cv certifications - Zeigt Zertifikate an', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    await this.addLineTypewriter('Direktzugriff mit "cv 1", "cv 2", usw.', this.glitchEnabled);
+  }
+
+  async showCvEducation(): Promise<void> {
+    await this.addLineTypewriter('[ Bildungsweg ]', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    
+    for (const edu of this.personalInfo.cv.education) {
+      const boxWidth = 58;
+      
+      this.addLine('┌' + '─'.repeat(boxWidth) + '┐');
+      
+      await this.addLineTypewriter(`│ ${edu.degree}${' '.repeat(boxWidth - edu.degree.length - 2)} │`, this.glitchEnabled);
+      const instYear = `${edu.institution} (${edu.year})`;
+      await this.addLineTypewriter(`│ ${instYear}${' '.repeat(boxWidth - instYear.length - 2)} │`, this.glitchEnabled);
+      
+      const descLines = this.wrapText(edu.description, boxWidth - 4);
+      for (const line of descLines) {
+        await this.addLineTypewriter(`│ ${line}${' '.repeat(boxWidth - line.length - 2)} │`, this.glitchEnabled);
+      }
+      
+      this.addLine('└' + '─'.repeat(boxWidth) + '┘');
+      await this.addLineTypewriter('', this.glitchEnabled);
+    }
+  }
+
+  async showCvExperience(): Promise<void> {
+    await this.addLineTypewriter('[ Berufserfahrung ]', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    
+    for (const exp of this.personalInfo.cv.experience) {
+      const boxWidth = 58;
+      
+      this.addLine('┌' + '─'.repeat(boxWidth) + '┐');
+      
+      await this.addLineTypewriter(`│ ${exp.position}${' '.repeat(boxWidth - exp.position.length - 2)} │`, this.glitchEnabled);
+      if (exp.company) {
+        await this.addLineTypewriter(`│ ${exp.company}${' '.repeat(boxWidth - exp.company.length - 2)} │`, this.glitchEnabled);
+      }
+      await this.addLineTypewriter(`│ Zeitraum: ${exp.period}${' '.repeat(boxWidth - exp.period.length - 11)} │`, this.glitchEnabled);
+      await this.addLineTypewriter(`│${' '.repeat(boxWidth - 1)} │`, this.glitchEnabled);
+      
+      const descLines = this.wrapText(exp.description, boxWidth - 4);
+      for (const line of descLines) {
+        await this.addLineTypewriter(`│ ${line}${' '.repeat(boxWidth - line.length - 2)} │`, this.glitchEnabled);
+      }
+      
+      this.addLine('└' + '─'.repeat(boxWidth) + '┘');
+      await this.addLineTypewriter('', this.glitchEnabled);
+    }
+  }
+
+  async showCvLanguages(): Promise<void> {
+    await this.addLineTypewriter('[ Sprachkenntnisse ]', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    
+    const boxWidth = 40;
+    this.addLine('┌' + '─'.repeat(boxWidth) + '┐');
+    
+    for (const lang of this.personalInfo.cv.languages) {
+      const line = `│ ${lang.name}: ${lang.level}`;
+      await this.addLineTypewriter(line + ' '.repeat(boxWidth - line.length) + ' │', this.glitchEnabled);
+    }
+    
+    this.addLine('└' + '─'.repeat(boxWidth) + '┘');
+  }
+
+  async showCvCertifications(): Promise<void> {
+    await this.addLineTypewriter('[ Zertifikate ]', this.glitchEnabled);
+    await this.addLineTypewriter('', this.glitchEnabled);
+    
+    const boxWidth = 50;
+    this.addLine('┌' + '─'.repeat(boxWidth) + '┐');
+    
+    for (const cert of this.personalInfo.cv.certifications) {
+      const line = `│ ${cert.name} (${cert.issuer}, ${cert.year})`;
+      await this.addLineTypewriter(line + ' '.repeat(boxWidth - line.length) + ' │', this.glitchEnabled);
+    }
+    
+    this.addLine('└' + '─'.repeat(boxWidth) + '┘');
   }
 }
