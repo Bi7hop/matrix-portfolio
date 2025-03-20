@@ -1,7 +1,7 @@
 <div align="center">
 # 🖥️ MatrixPortfolio
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,8,9&height=200&section=header&text=Matrix%20Portfolio&fontColor=00FF00&fontSize=70&animation=fadeIn&fontAlignY=38" width="100%" />
-### Your Command-Line Portfolio in the Digital Matrix
+Your Command-Line Portfolio in the Digital Matrix 
   
 [![Version](https://img.shields.io/badge/version-1.0.0-00FF00?style=for-the-badge)](https://github.com/Bi7hop/MatrixFolio)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -142,5 +142,5 @@ Marcel Menke - marcel.menke1981@gmail.com
 </div>
 <div align="center"> 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,8,9&height=100&section=footer" width="100%" />
-<strong>MatrixPorfolio</strong> - <span style="color:#00FF00">Developed in the Matrix</span> by <a href="https://github.com/Bi7hop">Marcel Menke</a>
+<strong>MatrixPortfolio</strong> - <span style="color:#00FF00">Developed in the Matrix</span> by <a href="https://github.com/Bi7hop">Marcel Menke</a>
 </div>
