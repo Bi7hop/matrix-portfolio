@@ -1,7 +1,7 @@
 <div align="center">
 # 🖥️ MatrixPortfolio
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,8,9&height=200&section=header&text=Matrix%20Portfolio&fontColor=00FF00&fontSize=70&animation=fadeIn&fontAlignY=38" width="100%" />
-Your Command-Line Portfolio in the Digital Matrix
+### Your Command-Line Portfolio in the Digital Matrix
   
 [![Version](https://img.shields.io/badge/version-1.0.0-00FF00?style=for-the-badge)](https://github.com/Bi7hop/MatrixFolio)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -40,6 +40,20 @@ MatrixPortfolio transforms your portfolio into a cyberpunk terminal experience w
   </tr>
   <tr>
     <td align="center" width="33%">
+      <h3>&gt; cv</h3>
+      <p>Display an interactive resume with your professional experience and education</p>
+    </td>
+    <td align="center" width="33%">
+      <h3>&gt; glitch</h3>
+      <p>Toggle an immersive glitch effect to enhance the cyberpunk atmosphere</p>
+    </td>
+    <td align="center" width="33%">
+      <h3>&gt; theme</h3>
+      <p>Change terminal color schemes with various matrix-inspired themes</p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
       <h3>&gt; hack</h3>
       <p>Trigger an impressive hacking animation with cascading hexadecimal sequences</p>
     </td>
@@ -50,6 +64,20 @@ MatrixPortfolio transforms your portfolio into a cyberpunk terminal experience w
     <td align="center" width="33%">
       <h3>&gt; whoami</h3>
       <p>Reveal your identity in the digital realm with ASCII art and styling</p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <h3>&gt; showcase</h3>
+      <p>Browse and explore all your portfolio projects in a structured list</p>
+    </td>
+    <td align="center" width="33%">
+      <h3>&gt; open [name]</h3>
+      <p>Launch a live demo of any selected project directly from the terminal</p>
+    </td>
+    <td align="center" width="33%">
+      <h3>&gt; code [name]</h3>
+      <p>View the source code of any project with syntax highlighting</p>
     </td>
   </tr>
 </table>
@@ -82,18 +110,19 @@ After starting, the application will be available at http://localhost:4200/.
 ### Terminal Commands
 Once the portfolio loads, try these commands:
 ```bash
-help                # Show available commands
-about               # Show information about me
-skills              # Show my technical skills
-projects            # List my projects
-contact             # Display contact information
-clear               # Clear terminal
-date                # Show current date and time
-whoami              # Show user name
-ls/dir              # List directory contents
-echo [message]      # Echo a message
-hack                # Start hacking animation
-matrix              # Start Matrix rain effect
+help          # Show this help message        whoami        # Show user name
+about         # Show information about me     ls/dir        # List directory contents
+skills        # Show my technical skills      echo [msg]    # Echo a message
+projects      # List my projects              hack          # Start hacking animation
+contact       # Display contact information   matrix        # Start Matrix rain effect
+clear         # Clear terminal                cv            # Show interactive resume
+date          # Show current date and time    glitch        # Toggle glitch mode
+theme         # Show or change terminal themes               
+logout        # Log out of the terminal        
+showcase                   # List all projects
+showcase [number/name]     # Show details about a specific project
+open [number/name]         # Open project live demo
+code [number/name]         # View project source code
 ```
 
 Try to discover the hidden easter eggs in the terminal!
@@ -113,5 +142,5 @@ Marcel Menke - marcel.menke1981@gmail.com
 </div>
 <div align="center"> 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,8,9&height=100&section=footer" width="100%" />
-<strong>MatrixPortfolio</strong> - <span style="color:#00FF00">Developed in the Matrix</span> by <a href="https://github.com/Bi7hop">Marcel Menke</a>
+<strong>MatrixPorfolio</strong> - <span style="color:#00FF00">Developed in the Matrix</span> by <a href="https://github.com/Bi7hop">Marcel Menke</a>
 </div>
