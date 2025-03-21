@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class TypewriterService {
-  typeText(text: string, container: HTMLElement, speed: number = 75, enableGlitch: boolean = false): Promise<void> {
+  typeText(text: string, container: HTMLElement, speed: number = 85, enableGlitch: boolean = false): Promise<void> {
     return new Promise(resolve => {
       let i = 0;
       container.textContent = '';
